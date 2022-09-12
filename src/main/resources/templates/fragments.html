@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="html_head" id="html_head">
+    <meta name="description" content="">
+    <title>HUNTER TEXTILES</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/icon" href="images/favicon.jpeg" />
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body class="app sidebar-mini rtl">
+	<div th:fragment="app-layout">
+		<!-- Navbar-->
+      <header class="app-header">
+        <a class="app-header__logo" th:href="@{/home}">HUNTER TEXTILES</a>
+        <!-- Sidebar toggle button-->
+        <a class="app-sidebar__toggle" href="#" data-toggle="sidebar"
+          aria-label="Hide Sidebar"></a>
+        <!-- Navbar Right Menu-->
+        <ul class="app-nav">
+          <li><a class="app-nav__product" th:href="@{/logout}"><i
+            class="fa fa-sign-out fa-lg" title="LOG OUT"></i></a></li>
+        </ul>
+      </header>
+      <!-- Sidebar menu-->
+      <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+      <aside class="app-sidebar">
+        <div class="app-sidebar__user">
+          <img class="app-sidebar__user-avatar" src="images/logo_contact.jpeg"
+            alt="Logo">
+          <div sec:authorize="isAuthenticated()">
+            <p class="app-sidebar__user-name">
+              <span sec:authentication="principal.user.username">User</span>
+            </p>
+            <p class="app-sidebar__user-name">
+              <span sec:authentication="principal.authorities">Role</span>
+            </p>
+          </div>
+        </div>
+        <ul class="app-menu">
+          <li><a class="app-menu__product" th:href="@{/home}"><i
+            class="app-menu__icon fa fa-square"></i><span
+            class="app-menu__label">Dashboard</span></a></li>
+          <li class="treeview">
+            <a class="app-menu__product" href="#"
+              data-toggle="treeview"><i class="app-menu__icon fa fa-user"></i><span
+              class="app-menu__label">User Management</span><i
+              class="treeview-indicator fa fa-angle-right"></i></a>
+            <ul class="treeview-menu">
+              <li><a class="treeview-product" th:href="@{/admin}"><i
+                class="icon fa fa-user"></i> Admin</a></li>
+              <li><a class="treeview-product" th:href="@{/moderator}"><i
+                class="icon fa fa-user-plus"></i>Moderator </a></li>
+              <li><a class="treeview-product" th:href="@{/party}"><i
+                class="icon fa fa-users"></i>Party</a></li>
+              <li><a class="treeview-product" th:href="@{/customer}"><i
+                class="icon fa fa-users"></i>Customer</a></li>
+            </ul>
+          </li>
+          <li><a class="app-menu__product" th:href="@{/stock-in}"><i
+            class="app-menu__icon fa fa-arrow-right"></i><span
+            class="app-menu__label">New Fabric Entry</span></a></li>
+          <li><a class="app-menu__product" th:href="@{/stock}"><i
+            class="app-menu__icon fa fa-list-ol"></i><span
+            class="app-menu__label">Fabric Stocks</span></a></li>
+          <li><a class="app-menu__product" th:href="@{/stock-out}"><i
+            class="app-menu__icon fa fa-arrow-left"></i><span
+            class="app-menu__label">Sell Fabric</span></a></li>
+          <li><a class="app-menu__product" th:href="@{/total-sell}"><i
+            class="app-menu__icon fa fa-plus"></i><span
+            class="app-menu__label">Total Sale</span></a></li>
+          <li class="treeview">
+            <a class="app-menu__product" th:href="@{/product}" href="#"
+              data-toggle="treeview"><i class="app-menu__icon fa fa-file-text-o"></i><span
+              class="app-menu__label">Bill</span><i
+              class="treeview-indicator fa fa-angle-right"></i></a>
+            <ul class="treeview-menu">
+              <li><a class="treeview-product" th:href="@{/}"><i
+                class="icon fa fa-file-text"></i> GST Bill</a>
+              </li>
+              <li><a class="treeview-product" th:href="@{/}"><i
+                class="icon fa fa-file-text"></i>Non GST Bill</a>
+              </li>
+            </ul>
+          </li>
+          <li><a class="app-menu__product" th:href="@{/}"><i
+            class="app-menu__icon fa fa-inr"></i><span
+            class="app-menu__label">Account Management</span></a></li>
+          <li><a class="app-menu__product" th:href="@{/}"><i
+            class="app-menu__icon fa fa-bell"></i><span
+            class="app-menu__label">Reminder</span></a></li>
+        </ul>
+      </aside>
+	</div>
+	
+	<div th:fragment="img_upd_modal" class="modal fade" id="imageUploadModal" tabindex="-1" role="dialog" aria-labelledby="imageUploadModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="image_container">
+							<img id="blah" src="#" alt="your image" />
+						</div>
+						<button id="crop_button" class="submit action-button">Crop</button> 
+					</div>
+				</div>
+			</div>
+	</div>
+	
+	<!-- Essential javascripts for application to work-->
+	<script th:fragment="main_scripts" src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script th:fragment="main_scripts" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script th:fragment="main_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+	<script th:fragment="main_scripts" src="js/main.js"></script>
+	<script th:fragment="main_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script>
+	
+	
+	<link th:fragment="add_edit_scripts" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0/cropper.min.css" integrity="sha256-FeDcPwV8ZgxG1MU5L/b2i8clOmqZJKK0eyDHqrQaXxY=" crossorigin="anonymous">
+	<script th:fragment="add_edit_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0/cropper.min.js"></script>
+	<script th:fragment="add_edit_scripts" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+	<script th:fragment="add_edit_scripts" src="js/dynaDrop.js"></script>
+	<script th:fragment="add_edit_scripts" src="js/crop_compress.js"></script>
+	<!-- <script th:fragment="add_edit_scripts" src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>-->
+	<script th:fragment="add_edit_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.2.1/html5-qrcode.min.js"></script>
+	<script th:fragment="add_edit_scripts" src="js/html5-qrcode.js"></script>
+	  
+	<script th:fragment="main_scripts" >
+		document.addEventListener("DOMContentLoaded", function() {
+			var radio = document.querySelectorAll('.radioBtn'),
+			checked = false;
+			if(radio){
+				for (var i = 0; i < radio.length; i++) {
+					if (radio[i].checked) {
+						checked = true;
+						break;
+					}
+				}
+				if (!checked) radio[0].checked = true;
+			}
+		});
+	</script>
+	
+	<script th:fragment="otp_generate_script">
+		function generatePin(phone) {
+			$.ajax({
+			url : 'generatePin',
+			data : { "phone" : phone },
+			success : function(result) {
+				if(result == 'Success'){
+					document.querySelector("p[name=status]").innerHTML = `OTP Sent successfully!`;
+					$('#errorMessage').removeClass('alert');
+					$('#errorMessage').removeClass('alert-dismissible');
+					$('#errorMessage').removeClass('alert-danger error');
+					
+				} else if(result == 'User Not Found'){
+					$('#errorMessage').html(`The entered number is not registered!`);
+					$('#errorMessage').addClass('alert');
+					$('#errorMessage').addClass('alert-dismissible');
+					$('#errorMessage').addClass('alert-danger error');
+					
+				} else {
+					$('#errorMessage').html(`OTP request failed!`);
+					$('#errorMessage').addClass('alert');
+					$('#errorMessage').addClass('alert-dismissible');
+					$('#errorMessage').addClass('alert-danger error');
+				}
+			}
+			});
+		}
+
+		$(window).on('load', function(){
+			$('#errorMessage').html('');
+			$('#errorMessage').removeClass('alert');
+			$('#errorMessage').removeClass('alert-dismissible');
+			$('#errorMessage').removeClass('alert-danger error');
+		});
+		
+	</script>
+	
+	<script th:fragment="user_search_script">
+		$("#searchUser").on("keyup", function() {
+		var value = $(this).val();
+	
+		$("table tr").each(function(index) {
+			if (index !== 0) {
+	
+				$row = $(this);
+	
+				var id = $row.text();
+	
+				if (!id.includes(value)) {
+					$row.hide();
+				}
+				else {
+					$row.show();
+				}
+			}
+		});
+		});
+	</script>
+	
+</body>
+</html>

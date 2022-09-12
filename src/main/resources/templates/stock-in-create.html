@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="fragments :: html_head" />
+  <body class="app sidebar-mini rtl">
+    <div th:replace="fragments :: app-layout"></div>
+	
+      <main class="app-content">
+         <div class="row">
+			<div class="col-md-12">
+				<form class="dashboardicon" style="margin-top: 0; text-align: left;" th:action="@{/addStockIn}" method="post" enctype="multipart/form-data">
+				<legend style="text-align:center; padding-top: 0px;" >New Stock In</legend>
+					 <fieldset style="margin-top: 0;">
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Sort No</label>
+								<input type="text" class="form-control" name="sortNo" id="sortNo" placeholder="Sort No">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Bill No</label>
+								<input type="text" class="form-control" name="billNo" id="billNo" placeholder="Bill No">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Mahajan Name</label>
+								<select class="form-control" name="mahajan" id="select" style="height: 48px;" >
+									<option selected disabled="disabled" value="">Mahajan Name</option>
+									<option style="color: #333;" th:each="mahajan : ${mahajans}" th:text="${mahajan.name}" th:value="${mahajan.id}" ></option>
+								</select>
+							</div>						
+						</div>
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Date</label>
+								<input type="Date" class="form-control" name="date" id="date" placeholder="Date">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Rate</label>
+								<input type="text" class="form-control" name="rate" id="rate" placeholder="Rate" onchange="calculateAllAmounts(this.value)">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"><label>Received By</label>
+								<select class="form-control" name="receivedBy" id="receivedBy" style="height: 48px;" >
+									<option selected disabled="disabled" value="">Received By</option>
+									<option value="">Bosta (KG)</option>
+									<option value="">Roll No(M)</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-12">
+								<label>Remarks</label>
+								<input type="text" class="form-control" name="remarks" id="remarks" placeholder="Remarks">
+							</div>
+						</div>
+						<div class="table-responsive table_size" style="margin-top: 50px;">
+							<table class="table table-bordered table-responsive table-hover" style="width: 100%;" id="rollTable" >
+							<thead id="myHeader" class="thead-inverse" style="background-color: #199999; color: #FFF;">
+								<tr>
+									<th class="table_heading">Sl No</th>
+									<th class="table_heading">Roll No*</th>
+									<th class="table_heading">Quantity(M)</th>
+									<!--<th class="table_heading">Quantity(Bosta)</th>Only if bosta selected-->
+									<th class="table_heading">Price</th>
+									<th class="table_heading">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr style="background-color: #FFF">
+									<td></td>
+									<td><input type="text" id="rollNoInput" placeholder="Roll No*"></td>
+									<td><input type="text" id="quantityInput" class="quantity" placeholder="Quantity" onchange="calculateAmount(this.value)"></td>
+									<td><input type="text" id="priceInput" placeholder="Price" disabled="disabled"></td><!--auto calculate [rate*quantity per meter]-->
+									<td style="width: 24%;">
+										<div class="dashboardicon2" style="text-align: left;">
+											<input type="button" id="addStockInPartBtn" class="submit action-button" value="Add New" style=" border-radius: 0;">
+										</div>
+									</td>
+								</tr>
+							</tbody>
+							</table>
+						</div>
+						<input type="button" name="cancel" class="previous action-button-previous" value="Cancel" onclick="window.history.back()" >
+						<input type="submit" name="submit" class="submit action-button" value="Save">
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		
+    </main>
+	
+	<div th:replace="fragments :: img_upd_modal"></div>
+	
+	<div th:replace="fragments :: main_scripts"></div>
+	<div th:replace="fragments :: add_edit_scripts"></div>
+   </body>
+</html>

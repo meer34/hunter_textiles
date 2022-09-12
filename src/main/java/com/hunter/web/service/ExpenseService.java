@@ -1,0 +1,33 @@
+package com.hunter.web.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hunter.web.model.Admin;
+import com.hunter.web.repo.AdminRepo;
+
+@Service
+public class ExpenseService {
+
+	@Autowired
+	private AdminRepo adminRepo;
+
+	public Admin saveUserToDB(Admin admin) {
+		return adminRepo.save(admin);
+	}
+	
+	public Admin findUserById(Long id) {
+		return adminRepo.findById(id).get();
+	}
+
+	public List<Admin> getExpenses() {
+		return adminRepo.findAll();
+	}
+
+	public void deleteUserById(Long id) {
+		adminRepo.deleteById(id);
+	}
+
+}
