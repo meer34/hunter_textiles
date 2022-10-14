@@ -10,7 +10,7 @@
 			<div class="col-md-12">
 				<form class="dashboardicon" style="margin-top: 0; text-align: left;" th:action="@{addStockIn}" method="post" enctype="multipart/form-data">
 					<fieldset style="margin-top: 0;" id="printTable" >
-					<legend style="text-align:center; padding-bottom: 60px;" > Stock In View</legend>
+					<legend style="text-align:center; padding-bottom: 60px;" > Stock In</legend>
 					<div class="col-lg-12 flexdisplay">
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 							<label>Sort No</label>
@@ -35,7 +35,9 @@
 							<input disabled="disabled" type="text" class="form-control" name="rate" th:value="${stockIn.rate}" >
 						</div>
 						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"><label>Received By</label>
-							<input disabled="disabled" type="text" class="form-control" name="receivedBy" th:value="${stockIn.receivedBy}" >
+							<input disabled="disabled" type="text" class="form-control" name="receivedBy" th:if="${stockIn.receivedBy} == 'KG'" value="Bosta (KG)" >
+							<input disabled="disabled" type="text" class="form-control" name="receivedBy" th:if="${stockIn.receivedBy} == 'M'" value="Roll No (M)" >
+							<input disabled="disabled" type="text" class="form-control" name="receivedBy" th:if="${stockIn.receivedBy} == null" >
 						</div>
 					</div>
 					<div class="col-lg-12 flexdisplay">
@@ -45,26 +47,26 @@
 						</div>
 					</div>
 					<div class="table-responsive table_size" style="margin-top: 50px;">
-					<form th:action="@{/stock-in}" method="get">
 						<table class="table table-bordered table-responsive table-hover" style="width: 100%;">
 							<thead id="myHeader" class="thead-inverse" style="background-color: #199999; color: #FFF;">
 								<tr>
 								<th class="table_heading">Sl No</th>
 								<th class="table_heading">Roll No*</th>
 								<th class="table_heading">Quantity(M)</th>
+								<th th:if="${stockIn.receivedBy} == 'KG'" class="table_heading">Quantity(Bosta)</th>
 								<th class="table_heading">Total Price</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr style="background-color: #FFF" th:each="stockInPart: ${stockIn.stockInRollList}">
-									<td/>
+								<tr style="background-color: #FFF" th:each="stockInPart, iterator : ${stockIn.rollList}">
+									<td th:text="${iterator.count}" />
 									<td th:text="${stockInPart.rollNo}"/>
 									<td th:text="${stockInPart.quantity}" />
-									<td th:text="${stockInPart.price}" />
+									<td th:if="${stockIn.receivedBy} == 'KG'" th:text="${stockInPart.bostaKg}" />
+									<td th:text="${stockInPart.stockInPrice}" />
 								</tr>
 							</tbody>
 						</table>
-					</form>
 					</div>
 					<input type="button" class="previous action-button-previous" value="Cancel" onclick="window.history.back()" >
 					<input type="button" class="submit action-button" value="Print" onclick="printData()" >
@@ -76,6 +78,5 @@
     </main>
 	
 	<div th:replace="fragments :: main_scripts"></div>
-	<div th:replace="fragments :: add_edit_scripts"></div>
    </body>
 </html>

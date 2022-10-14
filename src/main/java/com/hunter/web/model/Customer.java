@@ -21,6 +21,7 @@ public class Customer {
 	private String name;
 	private String phone;
 	private String address;
+	private String stateCode;
 	private String gst;
 	
 	@OneToMany(mappedBy="customer")

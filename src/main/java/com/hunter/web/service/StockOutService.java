@@ -1,56 +1,53 @@
 package com.hunter.web.service;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.hunter.web.model.StockOut;
+import com.hunter.web.repo.RollRepo;
 import com.hunter.web.repo.StockOutRepo;
+import com.hunter.web.specification.StockOutSearchSpecification;
+import com.hunter.web.util.SearchSpecificationBuilder;
 
 @Service
 public class StockOutService {
 
-	@Autowired
-	private StockOutRepo stockOutRepo;
-	
+	@Autowired private StockOutRepo stockOutRepo;
+	@Autowired private RollRepo rollRepo;
+
 	public StockOut saveStockOutToDB(StockOut stockOut) {
-		stockOut.processParts();
+		stockOut.processParts(rollRepo);
 		return stockOutRepo.save(stockOut);
 	}
-	
+
 	public StockOut findStockOutById(Long id) {
 		return stockOutRepo.findById(id).get();
 	}
 
-	public List<StockOut> getAllStockOuts() {
-		return stockOutRepo.findAllByOrderByIdDesc();
+	public Page<StockOut> getAllStockOuts(Integer pageNo, Integer pageSize) {
+		return stockOutRepo.findAllByOrderByIdDesc(PageRequest.of(pageNo, pageSize));
 	}
-	
-	public List<StockOut> searchStockOutByDate(String fromDate, String toDate) throws ParseException {
 
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		
-		if(fromDate != null && !fromDate.equalsIgnoreCase("") && toDate != null && !toDate.equalsIgnoreCase("")) {
-			return stockOutRepo.findByDateBetween(formatter.parse(fromDate), formatter.parse(toDate));
-			
-		} else if((fromDate == null || fromDate.equalsIgnoreCase("")) && toDate != null && !toDate.equalsIgnoreCase("")) {
-			return stockOutRepo.findByDateLessThanEqual(formatter.parse(toDate));
-			
-		} else if((toDate == null || toDate.equalsIgnoreCase("")) && fromDate != null && !fromDate.equalsIgnoreCase("")) {
-			return stockOutRepo.findByDateGreaterThanEqual(formatter.parse(fromDate));
-			
-		} else {
-			return stockOutRepo.findAll();
-		}
+	public Page<StockOut> searchStockOutByDateAndKeyword(String keyword, 
+			String fromDate, String toDate, int pageNo, Integer pageSize) throws ParseException {
+
+		PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+		StockOutSearchSpecification spec = (StockOutSearchSpecification) SearchSpecificationBuilder.build(fromDate, toDate, keyword, StockOut.class);
+		return stockOutRepo.findAll(spec, pageRequest);
 
 	}
-	
+
 	public void deleteStockOutById(Long id) {
 		stockOutRepo.deleteById(id);
+	}
+
+	public List<StockOut> getAllBillsForCustomer(Long custId) {
+		return stockOutRepo.findByCustomer(custId);
 	}
 
 }

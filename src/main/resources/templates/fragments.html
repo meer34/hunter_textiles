@@ -68,7 +68,7 @@
           <li><a class="app-menu__product" th:href="@{/stock-in}"><i
             class="app-menu__icon fa fa-arrow-right"></i><span
             class="app-menu__label">New Fabric Entry</span></a></li>
-          <li><a class="app-menu__product" th:href="@{/stock}"><i
+          <li><a class="app-menu__product" th:href="@{/total-stock}"><i
             class="app-menu__icon fa fa-list-ol"></i><span
             class="app-menu__label">Fabric Stocks</span></a></li>
           <li><a class="app-menu__product" th:href="@{/stock-out}"><i
@@ -78,58 +78,101 @@
             class="app-menu__icon fa fa-plus"></i><span
             class="app-menu__label">Total Sale</span></a></li>
           <li class="treeview">
-            <a class="app-menu__product" th:href="@{/product}" href="#"
+            <a class="app-menu__product" href="#"
               data-toggle="treeview"><i class="app-menu__icon fa fa-file-text-o"></i><span
               class="app-menu__label">Bill</span><i
               class="treeview-indicator fa fa-angle-right"></i></a>
             <ul class="treeview-menu">
-              <li><a class="treeview-product" th:href="@{/}"><i
-                class="icon fa fa-file-text"></i> GST Bill</a>
+              <li><a class="treeview-product" th:href="@{/bill}"><i
+                class="icon fa fa-file-text"></i>Bill</a>
               </li>
-              <li><a class="treeview-product" th:href="@{/}"><i
-                class="icon fa fa-file-text"></i>Non GST Bill</a>
+              <li><a class="treeview-product" th:href="@{/bill-record}"><i
+                class="icon fa fa-file-text"></i>Bill Record</a>
               </li>
             </ul>
           </li>
-          <li><a class="app-menu__product" th:href="@{/}"><i
-            class="app-menu__icon fa fa-inr"></i><span
-            class="app-menu__label">Account Management</span></a></li>
-          <li><a class="app-menu__product" th:href="@{/}"><i
+          <li class="treeview">
+            <a class="app-menu__product" href="#"
+              data-toggle="treeview"><i class="app-menu__icon fa fa-file-text-o"></i><span
+              class="app-menu__label">Account Management</span><i
+              class="treeview-indicator fa fa-angle-right"></i></a>
+			<ul class="treeview-menu">
+              <li><a class="treeview-product" th:href="@{/income}"><i
+                class="icon fa fa-file-text"></i>Income</a></li>
+              <li><a class="treeview-product" th:href="@{/expense}"><i
+                class="icon fa fa-file-text"></i>Expense </a></li>
+              <li><a class="treeview-product" th:href="@{/account-report}"><i
+                class="icon fa fa-file-text"></i>Account Report </a></li>
+            </ul>
+          </li>
+          <li><a class="app-menu__product" th:href="@{/reminder}"><i
             class="app-menu__icon fa fa-bell"></i><span
             class="app-menu__label">Reminder</span></a></li>
         </ul>
       </aside>
 	</div>
-	
-	<div th:fragment="img_upd_modal" class="modal fade" id="imageUploadModal" tabindex="-1" role="dialog" aria-labelledby="imageUploadModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-body">
-						<div class="image_container">
-							<img id="blah" src="#" alt="your image" />
-						</div>
-						<button id="crop_button" class="submit action-button">Crop</button> 
-					</div>
-				</div>
+
+	<div th:fragment="search_bar">
+		<div class="col-lg-12 flexdisplay">
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+				<label>From Date</label> <input type="date" name="fromDate" id="fromDate" placeholder="From Date" th:value="${fromDate}">
 			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+				<label>To Date</label> <input type="date" name="toDate" id="toDate" placeholder="To Date" th:value="${toDate}" style="animation-delay: .2s">
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+				<label>Search</label> <input type="text" name="keyword" id="keyWord" placeholder="Search" th:value="${keyword}" style="animation-delay: .2s">
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<input type="button" name="clear" class="previous action-button-previous" value=" Clear " 
+				onClick="document.getElementById('fromDate').value='';document.getElementById('toDate').value='';document.getElementById('keyWord').value='';">
+			<input type="submit" class="submit action-button" value="Search">
+		</div>
 	</div>
-	
+
+	<div th:fragment="pagination" id="footer">
+		<div class="col-lg-1 col-xs-4" style="display: flex; float: right;" th:if="${listPage.totalPages > 0 && pageNumbers != null}">
+			<label style="margin-top: 10px; margin-right: 10px; margin-left: 2px;">View</label>
+			<select id="pageSize" style="height: 41px; background-color: #fff;"
+				class="pageSizeChange">
+				<option style="color: #333;" th:selected="${listPage.size == 10}">10</option>
+				<option style="color: #333;" th:selected="${listPage.size == 25}">25</option>
+				<option style="color: #333;" th:selected="${listPage.size == 50}">50</option>
+				<option style="color: #333;" th:selected="${listPage.size == 250}">250</option>
+			</select>
+		</div>
+		<nav class="pagination-outer" aria-label="Page navigation">
+			<input type="hidden" id="navUrl" th:value="${navigationUrl}">
+			<ul class="pagination" th:if="${listPage.totalPages > 0 && pageNumbers != null}">
+				<li class="page-item"><a href="#" class="page-link-prev"
+					aria-label="Previous"> <span aria-hidden="true">&lt;&lt;Previous</span>
+				</a></li>
+				<li th:each="pageNumber : ${pageNumbers}"
+					th:class="${pageNumber==listPage.number + 1} ? 'page-item active' : 'page-item'">
+
+					<a
+					th:class="${pageNumber==listPage.number + 1} ? 'pageElement active' : 'pageElement'"
+					th:text=${pageNumber}></a>
+				</li>
+				<li class="page-item"><a href="#" class="page-link-next"
+					aria-label="Next"> <span aria-hidden="true">Next&gt;&gt;</span>
+`				</a></li>
+				<li><input type="text" id="goToPageNo" placeholder="Go To"
+					class="goTo"></li>
+			</ul>
+		</nav>
+	</div>
+
+
 	<!-- Essential javascripts for application to work-->
 	<script th:fragment="main_scripts" src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script th:fragment="main_scripts" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script th:fragment="main_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
 	<script th:fragment="main_scripts" src="js/main.js"></script>
 	<script th:fragment="main_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script>
-	
-	
-	<link th:fragment="add_edit_scripts" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0/cropper.min.css" integrity="sha256-FeDcPwV8ZgxG1MU5L/b2i8clOmqZJKK0eyDHqrQaXxY=" crossorigin="anonymous">
-	<script th:fragment="add_edit_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.0.0/cropper.min.js"></script>
-	<script th:fragment="add_edit_scripts" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-	<script th:fragment="add_edit_scripts" src="js/dynaDrop.js"></script>
-	<script th:fragment="add_edit_scripts" src="js/crop_compress.js"></script>
-	<!-- <script th:fragment="add_edit_scripts" src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>-->
-	<script th:fragment="add_edit_scripts" src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.2.1/html5-qrcode.min.js"></script>
-	<script th:fragment="add_edit_scripts" src="js/html5-qrcode.js"></script>
+	<script th:fragment="main_scripts" src="js/calculate.js"></script>
+	<script th:fragment="bill_scripts" src="js/bill.js"></script>
 	  
 	<script th:fragment="main_scripts" >
 		document.addEventListener("DOMContentLoaded", function() {
@@ -184,18 +227,18 @@
 		
 	</script>
 	
-	<script th:fragment="user_search_script">
-		$("#searchUser").on("keyup", function() {
+	<script th:fragment="table_search_script">
+		$("#searchTable").on("keyup", function() {
 		var value = $(this).val();
 	
 		$("table tr").each(function(index) {
 			if (index !== 0) {
-	
+				
 				$row = $(this);
 	
 				var id = $row.text();
 	
-				if (!id.includes(value)) {
+				if (!id.toLowerCase().includes(value.toLowerCase())) {
 					$row.hide();
 				}
 				else {

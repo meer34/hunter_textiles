@@ -828,6 +828,7 @@ body.stop-scrolling {
   margin-top: 62px;
   margin-left: 20% !important;
   width: 78%;
+  height: 80vh;
 }
 .app-content2 {
   margin-top: 200px;
@@ -1960,3 +1961,23 @@ margin-top:10px;
   margin-left: 5px;
 }
 }
+
+.downloadBtn {
+  background-color: #2a3492;
+  margin-top: 26px !important;
+  margin-top: 26px !important;
+  border: none;
+  color: white;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+@media(max-width : 768px){
+.downloadBtn {
+	margin-top: 3px !important;
+	margin-bottom: 6px;
+	width: 100%;
+}
+}
+

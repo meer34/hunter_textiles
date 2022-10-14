@@ -8,76 +8,174 @@
     <main class="app-content">
          <div class="row">
 			<div class="col-md-12">
-				<form class="dashboardicon" style="margin-top: 0; text-align: left;" th:action="@{addStockOut}" method="post" enctype="multipart/form-data">
-				<legend style="text-align:center; padding-top: 0px;" >New Stock Out</legend>					
+				<form class="dashboardicon" style="margin-top: 0; text-align: left;" th:action="@{saveStockOut}" method="post" enctype="multipart/form-data">
 				<fieldset style="margin-top: 0;">
-					<div class="col-lg-12 flexdisplay">
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							<label>Buyer Name</label>
-							<select class="form-control" name="customer" id="select" style="height: 48px;" >
-								<option selected disabled="disabled" value="">Buyer Name</option>
-								<option style="color: #333;" th:each="customer : ${customers}" th:text="${customer.name}" th:value="${customer.id}" ></option>
-							</select>
+					<legend style="text-align:center; padding-bottom: 60px;" th:text="${header}"></legend>
+					<div id="tab1">
+						<form id="firstPageForm">
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<label>Buyer Name</label>
+								<select class="form-control" name="customer" id="select" style="height: 48px;" required>
+									<option selected disabled="disabled" value="">Buyer Name</option>
+									<option style="color: #333;" th:each="customer : ${customers}" 
+										th:text="${customer.name}" th:value="${customer.id}" th:selected="${customer.id==stockOut?.customer?.id}"></option>
+								</select>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<label>GST</label>
+								<input type="text" class="form-control" name="gst" placeholder="GST" th:value="${stockOut?.gst}">
+							</div>						
 						</div>
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							<label>GST</label>
-							<input type="text" class="form-control" name="gst" id="gst" placeholder="GST">
-						</div>						
-					</div>
-					<div class="col-lg-12 flexdisplay">
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"><label>Select Roll</label><!--can select multiple roll-->
-							<select class="form-control" name="selectRoll" id="selectRoll" style="height: 48px;" >
-								<option selected disabled="disabled" value="">Select Roll</option>
-								<option style="color: #333;" th:each="stockInRoll : ${stockInRolls}" th:text="${stockInRoll.rollNo}" th:value="${stockInRoll}" ></option>
-							</select>
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"><label>Select Roll</label>
+								<select class="form-control" name="selectRoll" id="selectRoll" style="height: 48px;" >
+									<option selected disabled="disabled" value="">Select Roll</option>
+									<option style="color: #333;" th:each="stockInRoll : ${stockInRolls}" th:text="${stockInRoll.rollNo}" th:value="${stockInRoll}" ></option>
+								</select>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<label>Total Quantity(M)</label>
+								<input type="text" class="form-control" name="totalQuantity" id="totalQuantity" placeholder="0" readonly th:value="${stockOut?.totalQuantity}">
+							</div>
 						</div>
-						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							<label>Total Quantity(M)</label>
-							<input type="text" class="form-control" name="totalQuantity" id="totalQuantity" placeholder="0" readonly><!--auto fill-->
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Rate Per Meter</label>
+								<input type="number" min="0" lass="form-control" name="rate" id="rate" value="0" th:value="${stockOut?.rate}">
+							</div>    
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Total Price</label>
+								<input type="text" class="form-control" name="totalPrice" id="totalPrice" placeholder="0" readonly th:value="${stockOut?.totalPrice}">
+							</div>  
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Date</label>
+								<input type="date" class="form-control" name="date" placeholder="Date" th:value="${stockOut?.date}">
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-12 flexdisplay">
-						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-							<label>Rate Per Meter</label>
-							<input type="text" class="form-control" name="rate" id="rate" placeholder="Rate Per Miter"><!--auto fill-->
-						</div>    
-						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-							<label>Total Price</label><!--auto fill-->
-							<input type="text" class="form-control" name="totalPrice" id="totalPrice" placeholder="Total Price" readonly><!--auto fill-->
-						</div>  
-						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-							<label>Date</label><!--auto fill-->
-							<input type="date" class="form-control" name="date" id="date" placeholder="Date"><!--auto fill-->
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-12">
+								<label>Remarks</label>
+								<input type="text" class="form-control" name="remarks" placeholder="Remarks" th:value="${stockOut?.remarks}">
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-12 flexdisplay">
-						<div class="col-lg-12">
-							<label>Remarks</label>
-							<input type="text" class="form-control" name="remarks" id="remarks" placeholder="Remarks">
+						<div class="table-responsive table_size" style="margin-top: 50px;">
+							<table class="table table-bordered table-responsive table-hover" style="width: 100%;" id="rollTable" >
+								<thead id="myHeader" class="thead-inverse" style="background-color: #199999; color: #FFF;">
+									<tr>
+										<th colspan="5" class="table_heading">Selected Roll</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr style="background-color: #199999; color: #FFF;">
+										<td>Sl No</td>
+										<td>Roll No</td>
+										<td>Quantity(M) </td>
+										<td>Price </td>
+										<td style="width: 10%;">Action</td>
+									</tr>
+									<tr style="background-color: #FFF" th:each="stockOutRoll, iterator : ${stockOut?.rollList}">
+										<td th:text="${iterator.count}" />
+										<td th:text="${stockOutRoll?.rollNo}" />
+										<td th:text="${stockOutRoll?.quantity}" />
+										<td th:text="${stockOutRoll?.stockOutPrice}" />
+										<td>
+											<input type="button" id="deleteStockOutRollBtn" class="submit action-button2" value="Delete" >
+											<input type="hidden" name="stockOutParts" class="submit action-button2" 
+												th:value="${stockOutRoll?.id} + '|~|' + ${stockOutRoll?.stockOutPrice}" ></td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
-					</div>
-					<div class="table-responsive table_size" style="margin-top: 50px;">
-					<form th:action="@{/stock-in}" method="get">
-						<table class="table table-bordered table-responsive table-hover" style="width: 100%;" id="rollTable" >
-							<thead id="myHeader" class="thead-inverse" style="background-color: #199999; color: #FFF;">
-								<tr>
-									<th colspan="5" class="table_heading">Selected Roll</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr style="background-color: #199999; color: #FFF;">
-									<td>Sl No</td>
-									<td>Roll No</td>
-									<td>Quantity(M) </td>
-									<td>Price </td>
-									<td style="width: 10%;">Action</td>
-								</tr>
-							</tbody>
-						</table> 
-					</form>
-					</div>
-							<input type="button" name="cancel" class="previous action-button-previous" value="Cancel" onclick="window.history.back()" >
-							<input type="submit" name="submit" class="submit action-button" value="Save">
+						<input type="button" id="cancelBtn" class="previous action-button-previous" value="Cancel" onclick="window.history.back()">
+						<input type="button" id="nextBtn" class="submit action-button" value="Next" onclick="nextTab()">
+						</form>
+					</div><!--Tab 1 end-->
+					
+					
+					
+					<div id="tab2">
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Bill No</label>
+								<input type="text" class="form-control" name="billNo" placeholder="Enter Bill No" th:value="${stockOut?.billNo}">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Bill Type</label>
+								<select class="form-control" name="billType" id="billType" style="height: 48px;" onChange="toggleGSTInfo(this.value)">
+									<option selected disabled="disabled" value="">Select Type</option>
+									<option th:selected="${stockIn?.billType =='GST'}">GST</option>
+									<option th:selected="${stockIn?.billType =='Non GST'}">Non GST</option>
+								</select>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Discount</label>
+								<input type="number" min="0" class="form-control" name="discount" value="0" th:value="${stockOut?.discount}">
+							</div>
+						</div>
+						
+						<div class="col-lg-12 flexdisplay" id="gstInfo">
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+								<label>HSN Code</label>
+								<input type="text" class="form-control" name="hsnCode" placeholder="Enter HSN Code" th:value="${stockOut?.hsnCode}">
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+								<label>CGST(%)</label>
+								<input type="number" min="0" max="100" class="form-control" name="cgst" value="0" th:value="${stockOut?.cgst}">
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+								<label>SGST(%)</label>
+								<input type="number" min="0" max="100" class="form-control" name="sgst" value="0" th:value="${stockOut?.sgst}">
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+								<label>IGST(%)</label>
+								<input type="number" min="0" max="100" class="form-control" name="igst" value="0" th:value="${stockOut?.igst}">
+							</div>
+						</div>
+						
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<label>Labour Charge</label>
+								<input type="number" min="0" class="form-control" name="labourCharge" value="0" th:value="${stockOut?.labourCharge}">
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<label>Payment Date</label>
+								<input type="date" class="form-control" name="paymentDate" placeholder="Payment Date" th:value="${stockOut?.paymentDate}">
+							</div>
+						</div>
+						
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<label>Total Paid</label>
+								<input type="number" min="0" class="form-control" name="totalPaid" value="0" th:value="${stockOut?.totalPaid}" onBlur="$(#totalDue).value(10)">
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+								<label>Total Due</label>
+								<input type="number" class="form-control" name="totalDue" id="totalDue" value="0" th:value="${stockOut?.totalDue}" readonly>
+							</div>
+						</div>
+						
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Transport</label>
+								<input type="text" class="form-control" name="transport" placeholder="Enter Transport No" th:value="${stockOut?.transport}">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Transport Bill No</label>
+								<input type="text" min="0" class="form-control" name="transportBillNo" placeholder="Transport Bill No" th:value="${stockOut?.transportBillNo}">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Transport GST No</label>
+								<input type="text" min="0" class="form-control" name="transportGstNo" placeholder="Transport GST No" th:value="${stockOut?.transportGstNo}">
+							</div>
+						</div>
+						
+						<input th:if="${stockOut?.id}" type="hidden" name="id" th:value="${stockOut?.id}">
+						<input type="button" id="previousBtn" class="previous action-button-previous" value="Previous" onclick="previousTab()">
+						<input type="submit" name="submit" class="submit action-button" value="Save">
+					</div> <!--End of tab 2-->
+					
+					
 					</fieldset>
 				</form>
 			</div>
@@ -85,9 +183,38 @@
 		
     </main>
 	
-	<div th:replace="fragments :: img_upd_modal"></div>
-	
 	<div th:replace="fragments :: main_scripts"></div>
-	<div th:replace="fragments :: add_edit_scripts"></div>
+	<script>
+		document.getElementById("tab2").style.display = "none";
+		document.getElementById("gstInfo").style.display = "none";
+		
+		function validatePageData(tag){
+			var inputs = document.getElementById('tab1').getElementsByTagName(tag);
+		    for(var i=0; i < inputs.length; i++){
+		      if(inputs[i].value === '' && inputs[i].hasAttribute('required')){
+		        alert(inputs[i].name + ' field is required!');
+		        return false;
+		      }
+		    }
+		    return true;
+		}
+		function nextTab(){
+			if(validatePageData("select") && validatePageData("input")){
+				document.getElementById("tab1").style.display = "none";
+				document.getElementById("tab2").style.display = "inline";
+			}
+		}
+		function previousTab(){
+			document.getElementById("tab2").style.display = "none";
+			document.getElementById("tab1").style.display = "inline";
+		}
+		function toggleGSTInfo(billType){
+			if(billType == 'GST'){
+				document.getElementById("gstInfo").style.display = "inline";
+			} else{
+				document.getElementById("gstInfo").style.display = "none";
+			}
+		}
+	</script>
    </body>
 </html>

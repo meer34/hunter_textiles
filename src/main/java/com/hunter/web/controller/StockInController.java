@@ -1,16 +1,19 @@
 package com.hunter.web.controller;
 
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hunter.web.model.StockIn;
@@ -28,22 +31,71 @@ public class StockInController {
 	@Autowired ModeratorService moderatorService;
 
 	@GetMapping("/stock-in")
-	public String showStockIn(Model model) {
-		System.out.println("Inside stock-in");
-		model.addAttribute("stockInList", stockInService.getAllStockIns());
+	public String showStockIn(Model model,
+			@RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size,
+			@RequestParam(value="fromDate", required = false) String fromDate,
+			@RequestParam(value="toDate", required = false) String toDate,
+			@RequestParam(value="keyword", required = false) String keyword) throws ParseException {
+		
+		Page<StockIn> listPage = null;
+		
+		if(keyword == null && fromDate == null && toDate == null) {
+			System.out.println("StockIn home page");
+			listPage = stockInService.getAllStockIns(page.orElse(1) - 1, size.orElse(4));
+			
+		} else {
+			System.out.println("Searching StockIn for fromDate:" + fromDate + " and toDate:" +toDate +" and keyword:" + keyword);
+			listPage = stockInService.searchStockInByDateAndKeyword(keyword, fromDate, toDate, page.orElse(1) - 1, size.orElse(4));
+			
+			model.addAttribute("fromDate", fromDate);
+			model.addAttribute("toDate", toDate);
+			model.addAttribute("keyword", keyword);
+			
+		}
+		
+		model.addAttribute("listPage", listPage);
+		int totalPages = listPage.getTotalPages();
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+					.boxed()
+					.collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+
 		return "stock-in";
+
 	}
 
 	@GetMapping("/addStockInPage")
 	public String showAddStockInPage(Model model) {
+
 		model.addAttribute("mahajans", mahajanService.getAllUsers());
+		model.addAttribute("header", "Add Stock In");
+
 		return "stock-in-create";
+
+	}
+
+	@RequestMapping(value = "/editStockInPage",
+			method = RequestMethod.GET)
+	public String editStockOutPage(Model model, @RequestParam("id") String id) throws Exception{
+
+		System.out.println("Got edit request for stock-out id " + id);
+
+		model.addAttribute("mahajans", mahajanService.getAllUsers());
+		model.addAttribute("header", "Edit Stock In");
+
+		model.addAttribute("stockIn", stockInService.findStockInById(Long.parseLong(id)));
+
+		return "stock-in-create";
+
 	}
 
 	@RequestMapping(value = "/addStockIn",
 			method = RequestMethod.POST)
 	public String addStock(Model model, StockIn stockIn, RedirectAttributes redirectAttributes) throws Exception{
-		
+
 		stockInService.saveStockInToDB(stockIn);
 		redirectAttributes.addFlashAttribute("successMessage", "Stock In added successfully!");
 		return "redirect:/stock-in";
@@ -55,31 +107,7 @@ public class StockInController {
 	public String viewStockIn(Model model, @RequestParam("id") String id) throws Exception{
 
 		System.out.println("Got view request for stock_in id " + id);
-
 		model.addAttribute("stockIn", stockInService.findStockInById(Long.parseLong(id)));
-		model.addAttribute("header", "Stock In");
-		model.addAttribute("submitValue", "Print");
-
-		model.addAttribute("parties", mahajanService.getAllUsers());
-		model.addAttribute("moderators", moderatorService.getAllUsers());
-
-		return "stock-in-view";
-
-	}
-
-	@RequestMapping(value = "/editStockIn",
-			method = RequestMethod.GET)
-	public String editStockIn(Model model, @RequestParam("id") String id) throws Exception{
-
-		System.out.println("Got edit request for stock-in id " + id);
-
-		model.addAttribute("stockIn", stockInService.findStockInById(Long.parseLong(id)));
-		model.addAttribute("header", "Edit Stock In");
-		model.addAttribute("submitValue", "Save");
-
-		model.addAttribute("parties", mahajanService.getAllUsers());
-		model.addAttribute("moderators", moderatorService.getAllUsers());
-
 		return "stock-in-view";
 
 	}
@@ -90,49 +118,13 @@ public class StockInController {
 
 		System.out.println("Got delete request for stock-in id " + id);
 		stockInService.deleteStockInById(id);
-		
+
 		redirectAttributes.addFlashAttribute("successMessage", "Stock In deleted successfully!");
 		return "redirect:/stock-in";
 
 	}
 
-	@RequestMapping(value = "/saveStockInEdit",
-			method = RequestMethod.POST)
-	public String saveStockInEdit(RedirectAttributes redirectAttributes, StockIn stockIn,
-			@RequestParam Long itemId,
-			@RequestParam("id") String id) throws Exception{
-
-		System.out.println("Got save edit request for stock_in id " + id);
-
-		stockInService.saveStockInToDB(stockIn);
-
-		redirectAttributes.addFlashAttribute("successMessage", "Stock In edited successfully!");
-		return "redirect:/stock-in";
-
-	}
-	
-	@RequestMapping(value = "/searchStockIn",
-			method = RequestMethod.GET)
-	public String searchStockIn(Model model, 
-			@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate,
-			@RequestParam("keyword") String keyword ) throws Exception{
-
-		List<StockIn> stockInList = new ArrayList<StockIn>();
-
-		for (StockIn StockIn : stockInService.searchStockInByDate(fromDate, toDate)) {
-			if(StockIn.toString().toLowerCase().contains(keyword.toLowerCase())) {
-				stockInList.add(StockIn);
-			}
-		}
-
-		System.out.println("Search size for fromDate:" + fromDate + " and toDate:" +toDate +" and keyword:" + keyword + " is - " + stockInList.size());
-
-		model.addAttribute("stockInList", stockInList);
-		return "stock-in";
-
-	}
-
+	/*
 	@RequestMapping(value = "/addStockInForScanCode",
 			method = RequestMethod.GET)
 	public String addStockInForScanCode(Model model, @RequestParam("action") String action, 
@@ -154,7 +146,7 @@ public class StockInController {
 
 	}
 
-	@RequestMapping(value = "/checkIfScanCodeExistsForStockIn",
+	 @RequestMapping(value = "/checkIfScanCodeExistsForStockIn",
 			method = RequestMethod.GET)
 	@ResponseBody
 	public String checkIfScanCodeExistsForStockIn(@RequestParam String scanCode) {
@@ -165,7 +157,7 @@ public class StockInController {
 			return "Not Exist";
 		}
 	}
-	
+
 	@RequestMapping(value = "/checkIfScanCodeExistsForStockOut",
 			method = RequestMethod.GET)
 	@ResponseBody
@@ -177,5 +169,47 @@ public class StockInController {
 			return "Not Exist";
 		}
 	}
+	 */
+	
+	
+	/*
+	 @GetMapping("/stock-in")
+	public String showStockIn(Model model,
+			@RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size,
+			@RequestParam(value="fromDate", required = false) String fromDate,
+			@RequestParam(value="toDate", required = false) String toDate,
+			@RequestParam(value="keyword", required = false) String keyword) throws ParseException {
+		
+		Page<StockIn> listPage = null;
+		
+		if(keyword == null) {
+			System.out.println("StockIn home page");
+			listPage = stockInService.getAllStockIns(page.orElse(0), size.orElse(4));
+			
+		} else {
+			System.out.println("Searching StockIn for fromDate:" + fromDate + " and toDate:" +toDate +" and keyword:" + keyword);
+			for (StockIn StockIn : stockInService.searchStockInByDate(fromDate, toDate)) {
+				if(StockIn.toString().toLowerCase().contains(keyword.toLowerCase())) {
+					listPage.getContent().add(StockIn);
+				}
+			}
+		}
+		
+		model.addAttribute("listPage", listPage);
+		int totalPages = listPage.getTotalPages();
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+					.boxed()
+					.collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+
+		return "stock-in";
+
+	}
+	 */
+	
+	
 
 }

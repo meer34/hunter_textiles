@@ -13,39 +13,18 @@
               <div th:if="${successMessage}" th:text="${successMessage}" class="alert alert-success" role="alert"></div>
               <div class="tile">
                 <h3 class="tile-title"></h3>
-                <form class="dashboardicon" th:action="@{/searchStockIn}" method="get">
-                  <div class="col-lg-12 flexdisplay">
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                      <label>From Date</label>
-                      <input type="date" name="fromDate" placeholder="">
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                      <label>To Date</label>
-                      <input type="date" name="toDate" placeholder="" style="animation-delay: .2s">
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                      <label>Search</label>
-                      <input type="text" name="keyword" placeholder="Search" style="animation-delay: .2s">
-                    </div>
-                  </div>
-                  <div class="col-lg-12" >
-                    <input type="submit" class="submit action-button" value="Search">
-                  </div>
+                
+                <form class="dashboardicon" th:action="@{/stock-in}" method="get">
+                	<div th:replace="fragments :: search_bar"></div>
                 </form>
+                
                 <div class="table-responsive table_size" style="margin-top: 50px;">
                   <form th:action="@{/stock-in}" method="get">
-                    <div class="dashboardicon2" style="text-align: left;" th:if="${stockInList.size() > 0}">
+                    <div class="dashboardicon2" style="text-align: left;" th:if="${listPage.content.size() > 0}">
                       <input type="submit" th:formaction="@{/viewStockIn}" name="action" class="submit action-button" value="View">
-                      <input type="submit" th:formaction="@{/editStockIn}" name="action" class="submit action-button" value="Edit">
+                      <input type="submit" th:formaction="@{/editStockInPage}" name="action" class="submit action-button" value="Edit">
                       <input type="button" name="action" class="submit action-button" value="Print" onclick="printData()">
                       <input type="submit" th:formaction="@{/deleteStockIn}" name="action" class="submit action-button2" value="Delete">
-                      <div class="col-lg-1 col-xs-4" style="display: flex; float: right;">
-                        <label style="margin-top: 10px;margin-right: 10px;margin-left: 2px;">View</label>
-                        <select name="" style="height: 41px; background-color: #fff; ">
-                          <option style="color: #333;">25</option>
-                          <option style="color: #333;">50</option>
-                        </select>
-                      </div>
                     </div>
                     <table class="table table-bordered table-responsive table-hover" style="width: 100%;" id="printTable" >
                       <thead class="thead-inverse" style="background-color: #199999; color: #FFF;">
@@ -62,7 +41,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr style="background-color: #FFF" th:each="stockIn: ${stockInList}">
+                        <tr style="background-color: #FFF" th:each="stockIn: ${listPage.content}">
                           <td class="noPrint"><input type='radio' th:value="${stockIn.id}" class="radioBtn" name='id'></td>
                           <td th:text="${stockIn.sortNo}" />
                           <td th:text="${stockIn.date}" />
@@ -76,25 +55,9 @@
                       </tbody>
                     </table>
                   </form>
-                  <nav class="pagination-outer" aria-label="Page navigation">
-                    <ul class="pagination">
-                      <li class="page-item">
-                        <a href="#" class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">«</span>
-                        </a>
-                      </li>
-                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">4</a></li>
-                      <li class="page-item"><a class="page-link" href="#">5</a></li>
-                      <li class="page-item">
-                        <a href="#" class="page-link" aria-label="Next">
-                        <span aria-hidden="true">»</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                  
+                  <div th:replace="fragments :: pagination"></div>
+                  
                 </div>
               </div>
             </div>

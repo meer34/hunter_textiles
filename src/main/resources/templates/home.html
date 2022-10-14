@@ -35,7 +35,7 @@
 					</div>
 					<div class="col-lg-6 col-xs-12">
 						<label>Search</label>
-						<input type="text" name="searchBy" placeholder="Search">s
+						<input type="text" name="mahajanName" id="searchTable" placeholder="Mahajan Name">
 					</div>
 				</div>
 				<input type="button" name="cancel" class="previous action-button-previous" value="Cancel">
@@ -52,11 +52,11 @@
 					</tr>
 					</thead>
 					<tbody>
-						<tr style="background-color:#FFF" th:each="item : ${itemList}">
-							<td th:text="${item.name}" />
-							<td th:text="${item.getStockInQuantity()}" />
-							<td th:text="${item.getStockOutQuantity()}" />
-							<td th:text="${item.quantity}" />
+						<tr style="background-color:#FFF" th:each="dashboard : ${dashboardList}">
+							<td th:text="${dashboard.mahajanName}" />
+							<td th:text="${dashboard.stockInCount}" />
+							<td th:text="${dashboard.stockOutCount}" />
+							<td th:text="${dashboard.stockInCount - dashboard.stockOutCount}" />
 						</tr>
 					</tbody>
 				</table>
@@ -68,5 +68,6 @@
 	
 	
     <div th:replace="fragments :: main_scripts"></div>
+    <div th:replace="fragments :: table_search_script"></div>
   </body>
 </html>
