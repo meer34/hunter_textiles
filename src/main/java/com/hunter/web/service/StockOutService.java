@@ -1,7 +1,6 @@
 package com.hunter.web.service;
 
 import java.text.ParseException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +31,10 @@ public class StockOutService {
 	public Page<StockOut> getAllStockOuts(Integer pageNo, Integer pageSize) {
 		return stockOutRepo.findAllByOrderByIdDesc(PageRequest.of(pageNo, pageSize));
 	}
+	
+	public Page<StockOut> getAllStockOutsForCustomer(Long custId, Integer pageNo, Integer pageSize) {
+		return stockOutRepo.findAllStockOutsByCustomerId(PageRequest.of(pageNo, pageSize), custId);
+	}
 
 	public Page<StockOut> searchStockOutByDateAndKeyword(String keyword, 
 			String fromDate, String toDate, int pageNo, Integer pageSize) throws ParseException {
@@ -44,10 +47,6 @@ public class StockOutService {
 
 	public void deleteStockOutById(Long id) {
 		stockOutRepo.deleteById(id);
-	}
-
-	public List<StockOut> getAllBillsForCustomer(Long custId) {
-		return stockOutRepo.findByCustomer(custId);
 	}
 
 }

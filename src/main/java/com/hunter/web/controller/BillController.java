@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +20,15 @@ import com.hunter.web.service.StockOutService;
 import com.hunter.web.service.SummaryService;
 
 @Controller
+@PropertySource("classpath:hunter_textiles.properties")
 public class BillController {
 	
 	@Autowired StockInService stockInService;
 	@Autowired StockOutService stockOutService;
 	@Autowired SummaryService summaryService;
+	
+	@Value("${INITIAL_PAGE_SIZE}")
+	private Integer initialPageSize;
 
 	@RequestMapping("/bill")
 	public String bill(Model model,
@@ -30,17 +36,19 @@ public class BillController {
 			@RequestParam("size") Optional<Integer> size,
 			@RequestParam(value="fromDate", required = false) String fromDate,
 			@RequestParam(value="toDate", required = false) String toDate,
-			@RequestParam(value="keyword", required = false) String keyword) throws ParseException {
+			@RequestParam(value="keyword", required = false) String keyword,
+			@RequestParam(value="custId", required = false) Long custId) throws ParseException {
 		
 		Page<StockOut> listPage = null;
 		
 		if(keyword == null && fromDate == null && toDate == null) {
 			System.out.println("Bill home page");
-			listPage = stockOutService.getAllStockOuts(page.orElse(1) - 1, size.orElse(4));
+			if(custId != null) listPage = stockOutService.getAllStockOutsForCustomer(custId, page.orElse(1) - 1, size.orElse(initialPageSize));
+			else listPage = stockOutService.getAllStockOuts(page.orElse(1) - 1, size.orElse(initialPageSize));
 			
 		} else {
 			System.out.println("Searching Bill for fromDate:" + fromDate + " and toDate:" +toDate +" and keyword:" + keyword);
-			listPage = stockOutService.searchStockOutByDateAndKeyword(keyword, fromDate, toDate, page.orElse(1) - 1, size.orElse(4));
+			listPage = stockOutService.searchStockOutByDateAndKeyword(keyword, fromDate, toDate, page.orElse(1) - 1, size.orElse(initialPageSize));
 			
 			model.addAttribute("fromDate", fromDate);
 			model.addAttribute("toDate", toDate);
@@ -65,13 +73,6 @@ public class BillController {
 	public String billRecord(Model model) {
 		model.addAttribute("billRecordList", summaryService.getBillRecord());
 		return "bill-record";
-	}
-	
-	@RequestMapping("/billRecordsForCustomer")
-	public String billsForCustomer(Model model, @RequestParam("custId") String custId) {
-		model.addAttribute("stockOutList", stockOutService.getAllBillsForCustomer(Long.valueOf(custId != "" ? custId : "0")));
-		return "bill";
-		
 	}
 	
 	@RequestMapping("/printStockOutBill")

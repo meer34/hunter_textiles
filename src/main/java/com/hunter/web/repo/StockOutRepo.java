@@ -1,9 +1,8 @@
 package com.hunter.web.repo;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +14,6 @@ public interface StockOutRepo extends JpaRepository<StockOut, Long>, JpaSpecific
 	Page<StockOut> findAllByOrderByIdDesc(PageRequest of);
 	
 	@Query("FROM StockOut so where so.customer = (FROM Customer cust where cust.id = :custId)")
-	List<StockOut> findByCustomer(Long custId);
+	Page<StockOut> findAllStockOutsByCustomerId(Pageable pageable, Long custId);
 
 }

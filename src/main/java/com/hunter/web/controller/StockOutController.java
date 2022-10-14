@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +24,14 @@ import com.hunter.web.service.StockInService;
 import com.hunter.web.service.StockOutService;
 
 @Controller
+@PropertySource("classpath:hunter_textiles.properties")
 public class StockOutController {
 
 	@Autowired StockOutService stockOutService;
 	@Autowired StockInService stockInService;
 	@Autowired CustomerService customerService;
-
+	@Value("${INITIAL_PAGE_SIZE}") private Integer initialPageSize;
+	
 	@GetMapping("/stock-out")
 	public String showStockIn(Model model,
 			@RequestParam("page") Optional<Integer> page,
@@ -40,11 +44,11 @@ public class StockOutController {
 		
 		if(keyword == null && fromDate == null && toDate == null) {
 			System.out.println("StockOut home page");
-			listPage = stockOutService.getAllStockOuts(page.orElse(1) - 1, size.orElse(4));
+			listPage = stockOutService.getAllStockOuts(page.orElse(1) - 1, size.orElse(initialPageSize));
 			
 		} else {
 			System.out.println("Searching StockOut for fromDate:" + fromDate + " and toDate:" +toDate +" and keyword:" + keyword);
-			listPage = stockOutService.searchStockOutByDateAndKeyword(keyword, fromDate, toDate, page.orElse(1) - 1, size.orElse(4));
+			listPage = stockOutService.searchStockOutByDateAndKeyword(keyword, fromDate, toDate, page.orElse(1) - 1, size.orElse(initialPageSize));
 			
 			model.addAttribute("fromDate", fromDate);
 			model.addAttribute("toDate", toDate);
