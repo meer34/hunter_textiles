@@ -25,13 +25,6 @@
                       <input type="submit" th:formaction="@{/editStockOutPage}" name="action" class="submit action-button" value="Edit" >
                       <input type="button" name="action" class="submit action-button" value="Print" onclick="printData()" >
                       <input type="submit" th:formaction="@{/deleteStockOut}" name="action" class="submit action-button2" value="Delete" >
-                      <div class="col-lg-1 col-xs-4" style="display: flex; float: right;">
-                        <label style="margin-top: 10px;margin-right: 10px;margin-left: 2px;">View</label>
-                        <select name="" style="height: 41px; background-color: #fff; ">
-                          <option style="color: #333;">25</option>
-                          <option style="color: #333;">50</option>
-                        </select>
-                      </div>
                     </div>
                     <table class="table table-bordered table-responsive table-hover" style="width: 100%;" id="printTable" >
                       <thead class="thead-inverse" style="background-color: #199999; color: #FFF;">

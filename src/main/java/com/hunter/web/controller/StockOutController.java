@@ -38,13 +38,16 @@ public class StockOutController {
 			@RequestParam("size") Optional<Integer> size,
 			@RequestParam(value="fromDate", required = false) String fromDate,
 			@RequestParam(value="toDate", required = false) String toDate,
-			@RequestParam(value="keyword", required = false) String keyword) throws ParseException {
+			@RequestParam(value="keyword", required = false) String keyword,
+			@RequestParam(value="sortNo", required = false) String sortNo,
+			@RequestParam(value="rollNo", required = false) String rollNo) throws ParseException {
 		
 		Page<StockOut> listPage = null;
 		
 		if(keyword == null && fromDate == null && toDate == null) {
 			System.out.println("StockOut home page");
-			listPage = stockOutService.getAllStockOuts(page.orElse(1) - 1, size.orElse(initialPageSize));
+			if(sortNo == null && rollNo == null) listPage = stockOutService.getAllStockOuts(page.orElse(1) - 1, size.orElse(initialPageSize));
+			else listPage = stockOutService.getStockOutsBySortNoAndRollNo(sortNo, rollNo, page.orElse(1) - 1, size.orElse(initialPageSize));
 			
 		} else {
 			System.out.println("Searching StockOut for fromDate:" + fromDate + " and toDate:" +toDate +" and keyword:" + keyword);

@@ -1963,7 +1963,7 @@ margin-top:10px;
 }
 
 .downloadBtn {
-  background-color: #2a3492;
+  background-color: #037777;
   margin-top: 26px !important;
   margin-top: 26px !important;
   border: none;
@@ -1981,3 +1981,8 @@ margin-top:10px;
 }
 }
 
+.addProduct{
+    background: #bbc7b9;
+    padding: 10px;
+    margin-top: 8px;
+}

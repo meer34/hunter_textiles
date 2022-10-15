@@ -28,12 +28,16 @@ public class StockOutService {
 		return stockOutRepo.findById(id).get();
 	}
 
-	public Page<StockOut> getAllStockOuts(Integer pageNo, Integer pageSize) {
+	public Page<StockOut> getAllStockOuts(int pageNo, int pageSize) {
 		return stockOutRepo.findAllByOrderByIdDesc(PageRequest.of(pageNo, pageSize));
 	}
 	
-	public Page<StockOut> getAllStockOutsForCustomer(Long custId, Integer pageNo, Integer pageSize) {
+	public Page<StockOut> getAllStockOutsForCustomer(Long custId, int pageNo, int pageSize) {
 		return stockOutRepo.findAllStockOutsByCustomerId(PageRequest.of(pageNo, pageSize), custId);
+	}
+	
+	public Page<StockOut> getStockOutsBySortNoAndRollNo(String sortNo, String rollNo, int pageNo, int pageSize) {
+		return stockOutRepo.findStockOutsBySortNoAndRollNo(sortNo, rollNo, PageRequest.of(pageNo, pageSize));
 	}
 
 	public Page<StockOut> searchStockOutByDateAndKeyword(String keyword, 

@@ -12,7 +12,6 @@ import com.hunter.web.model.AccountReport;
 import com.hunter.web.model.BillRecord;
 import com.hunter.web.model.DashBoard;
 import com.hunter.web.model.StockIn;
-import com.hunter.web.model.StockOut;
 import com.hunter.web.model.TotalSale;
 import com.hunter.web.model.TotalStock;
 
@@ -28,22 +27,29 @@ public interface SummaryRepo extends JpaRepository<StockIn, Long>{
 	@Query("SELECT p.name AS mahajanName, "
 			+ "COUNT(DISTINCT r.rollNo) AS totalRollCount, COALESCE(SUM(r.quantity), 0) AS totalQuantity "
 			+ "FROM Party p LEFT JOIN StockIn si on p.id = si.mahajan LEFT JOIN Roll r on si.id = r.stockIn AND r.stockOutIndicator = FALSE  GROUP BY p.name")
-//	@Query("SELECT p.name AS mahajanName, COALESCE(SUM(si.totalQuantity), 0) AS stockInCount, COALESCE(SUM(r.quantity), 0) AS stockOutCount "
-//			+ "FROM Party p LEFT JOIN StockIn si on p.id = si.mahajan LEFT JOIN Roll r on si.id = r.stockIn AND r.stockOutIndicator = FALSE  GROUP BY p.name")
 	Page<TotalStock> findAllTotalStocksByMahajanName(Pageable pageable);
+	
+	@Query("SELECT si.id AS id, si.sortNo AS sortNo, p.name AS mahajanName, "
+			+ "COUNT(DISTINCT r.rollNo) AS totalRollCount, COALESCE(SUM(r.quantity), 0) AS totalQuantity "
+			+ "FROM Roll r LEFT JOIN StockIn si on r.stockIn = si.id LEFT JOIN Party p on si.mahajan = p.id "
+			+ "WHERE r.stockOutIndicator = FALSE AND si.sortNo LIKE %:keyword% GROUP BY si.id, si.sortNo, p.name")
+	Page<TotalStock> findAllTotalStocksBySortNoAndKeyword(String keyword, Pageable pageable);
+	
+	@Query("SELECT p.name AS mahajanName, "
+			+ "COUNT(DISTINCT r.rollNo) AS totalRollCount, COALESCE(SUM(r.quantity), 0) AS totalQuantity "
+			+ "FROM Party p LEFT JOIN StockIn si on p.id = si.mahajan LEFT JOIN Roll r on si.id = r.stockIn AND r.stockOutIndicator = FALSE "
+			+ "WHERE p.name like %:keyword% GROUP BY p.name")
+	Page<TotalStock> findAllTotalStocksByMahajanNameAndKeyword(String keyword, Pageable pageable);
 	
 	
 	//Total Sale
 	@Query("SELECT roll.sortNo AS sortNo, roll.rollNo AS rollNo, COALESCE(SUM(roll.quantity), 0) AS quantity FROM Roll roll "
 			+ "WHERE roll.stockOutIndicator = TRUE GROUP BY roll.sortNo, roll.rollNo")
-	List<TotalSale> findAllByTotalSales();
+	Page<TotalSale> findAllByTotalSales(Pageable pageable);
 	
 	@Query("SELECT roll.sortNo AS sortNo, roll.rollNo AS rollNo, COALESCE(SUM(roll.quantity), 0) AS quantity FROM Roll roll "
 			+ "WHERE roll.stockOutIndicator = TRUE AND (roll.sortNo LIKE %:keyword% OR roll.rollNo LIKE %:keyword% ) GROUP BY roll.sortNo, roll.rollNo")
-	List<TotalSale> findTotalSalesBySortNoOrRollNo(String keyword);
-	
-	@Query("FROM StockOut so WHERE EXISTS (SELECT 1 FROM Roll roll WHERE so.id = roll.stockOut AND roll.stockOutIndicator = TRUE)")
-	List<StockOut> findStockOutsBySortNoAndRollNo(String sortNo, String rollNo);
+	Page<TotalSale> findTotalSalesBySortNoOrRollNo(String keyword, Pageable pageable);
 	
 	
 	//Dash board

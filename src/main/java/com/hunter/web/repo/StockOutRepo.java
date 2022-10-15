@@ -15,5 +15,9 @@ public interface StockOutRepo extends JpaRepository<StockOut, Long>, JpaSpecific
 	
 	@Query("FROM StockOut so where so.customer = (FROM Customer cust where cust.id = :custId)")
 	Page<StockOut> findAllStockOutsByCustomerId(Pageable pageable, Long custId);
+	
+	@Query("FROM StockOut so WHERE EXISTS (SELECT 1 FROM Roll roll WHERE so.id = roll.stockOut AND roll.stockOutIndicator = TRUE "
+			+ "AND roll.sortNo = :sortNo AND roll.rollNo = :rollNo )")
+	Page<StockOut> findStockOutsBySortNoAndRollNo(String sortNo, String rollNo, Pageable pageable);
 
 }

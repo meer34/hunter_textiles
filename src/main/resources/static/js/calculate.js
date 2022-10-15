@@ -7,25 +7,37 @@ function calculateAmount(quantity) {
 			`<input type="text" id="priceInput" placeholder="Price" value="` + price + `" disabled="disabled">`;
 }
 
-function calculateAllAmounts(rate) {
-	var elements = document.getElementsByClassName("quantity");
-//	for(var i = 0; i < elements.length; i++) {
-//		alert(`#` + elements[i].value);
-//	}
+function updateRollTableData() {
+	var totalQuantity = 0;
+	var totalPrice = 0;
 
-	var table = document.getElementById("stockInPartTable");
-	for (var i = 0, row; row = table.rows[i]; i++) {
-		//iterate through rows
-		//rows would be accessed using the "row" variable assigned in the for loop
+	$("#rollTable tr").each(function(index){
+		if(index === 0 || index === 1) return;
+		var currentRow=$(this);
+		var rate = document.getElementById("rate").value;
+		var quantity=currentRow.find("td:eq(2)").text();
+		var priceCol=currentRow.find("td:eq(3)");
+		var dataCol=currentRow.find("td:eq(4)");
 
-		alert(`Data is` + row.cells[2].innerHTML);
+		price = quantity * rate;
+		id = new DOMParser().parseFromString(dataCol.html(), "text/html")
+				.getElementsByClassName('stockOutParts')[0].value
+				.split(`|~|`)[0];
 
-		for (var j = 0, col; col = row.cells[j]; j++) {
-			//iterate through columns
-			//columns would be accessed using the "col" variable assigned in the for loop
-		}
+		stockOutParts = id + `|~|` + price;
+		updatedData = `<input type="button" id="deleteStockOutRollBtn" class="submit action-button2" value="Delete" >`
+				+ `<input type="hidden" name="stockOutParts" class="stockOutParts" value="`+ stockOutParts +`" >`;
 
-	}
+		priceCol.html(price);
+		dataCol.html(updatedData);
+
+		totalQuantity = Number(totalQuantity) + Number(quantity);
+		totalPrice = Number(totalPrice) + Number(price);
+
+	});
+
+	document.getElementById("totalQuantity").value = totalQuantity;
+	document.getElementById("totalPrice").value = totalPrice;
 
 }
 
@@ -42,16 +54,16 @@ $("#addStockInPartBtn").click(function () {
 	row.insertCell(0).innerHTML = length;
 	row.insertCell(1).innerHTML = rollNo.value;
 	row.insertCell(2).innerHTML = quantity.value;
-	
+
 	var i = 3, kgValue='';
-	
+
 	if(kg != null) {
 		row.insertCell(i++).innerHTML = kg.value;
 		kgValue = kg.value;
 	}
-	
+
 	row.insertCell(i++).innerHTML = price.value;
-	
+
 	var stockInParts = rollNo.value + `|~|` + quantity.value + `|~|` + kgValue + `|~|` + price.value;
 	row.insertCell(i).innerHTML = `<input type="button" id="deleteStockInRollBtn" class="submit action-button2" value="Delete" >`
 			+ `<input type="hidden" name="stockInParts" class="submit action-button2" value="`+ stockInParts +`" >`;
@@ -69,9 +81,14 @@ $("#rollTable").on('click', '#deleteStockInRollBtn', function () {
 
 
 //Stock Out
-$("#selectRoll").change(function (event) {
-	var arr = event.target.value.split("~");
+$("#addRoll").click(function (event) {
+	rollValue = document.getElementById("selectRoll").value;
+	if(rollValue === '' || rollValue === null) {
+		alert('Please select a roll to add and try again!');
+		return;
+	}
 
+	arr = rollValue.split("~");
 	id = arr[0];
 	sortNo = arr[1];
 	rollNo = arr[2];
@@ -90,7 +107,7 @@ $("#selectRoll").change(function (event) {
 	row.insertCell(2).innerHTML = quantity;
 	row.insertCell(3).innerHTML = price;
 	row.insertCell(4).innerHTML = `<input type="button" id="deleteStockOutRollBtn" class="submit action-button2" value="Delete" >`
-			+ `<input type="hidden" name="stockOutParts" class="submit action-button2" value="`+ stockOutParts +`" >`;
+			+ `<input type="hidden" name="stockOutParts" class="stockOutParts" value="`+ stockOutParts +`" >`;
 
 	totalQuantity = document.getElementById("totalQuantity");
 	totalQuantity.value = Number(totalQuantity.value) + Number(quantity);

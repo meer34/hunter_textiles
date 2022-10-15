@@ -57,7 +57,7 @@ input[type=number] {
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
-    border: 1px solid #2a3492;
+    border: 1px solid #037777;
     transition: All 0.5s ease-in;
     -webkit-transition: All 0.5s ease-in;
     -moz-transition: All 0.5s ease-in;
@@ -71,7 +71,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /*buttons*/
 .dashboardicon .action-button {
     width: 100px;
-    background: #2a3492;
+    background: #037777;
     font-weight: bold;
     color: white;
     border: 0 none;
@@ -82,14 +82,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .dashboardicon .action-button:hover, .dashboardicon .action-button:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #2a3492;
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #037777;
 }
 
 .dashboardicon .action-button-previous {
   width: 100px;
   background: #C5C5F1;
   font-weight: bold;
-  color: #2a3492;
+  color: #037777;
   border: 0 none;
   border-radius: 25px;
   cursor: pointer;
@@ -234,7 +234,7 @@ li{
 /*buttons*/
 .dashboardicon .action-button {
     width: 100px;
-    background: #2a3492;
+    background: #037777;
     font-weight: bold;
     color: white;
     border: 0 none;
@@ -248,7 +248,7 @@ li{
   width: 100px;
   background: #C5C5F1;
   font-weight: bold;
-  color: #2a3492;
+  color: #037777;
   border: 0 none;
   border-radius: 25px;
   cursor: pointer;
@@ -278,7 +278,7 @@ li{
 /*buttons*/
 .dashboardicon2 .action-button {
   width: auto;
-  background: #2a3492;
+  background: #037777;
   font-weight: bold;
   color: white;
   border: 0 none;
@@ -288,14 +288,14 @@ li{
 }
 
 .dashboardicon2 .action-button:hover, .dashboardicon2 .action-button:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #2a3492;
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #037777;
 }
 
 .dashboardicon2 .action-button-previous {
     width: 100px;
     background: #C5C5F1;
     font-weight: bold;
-    color:#2a3492;
+    color:#037777;
     border: 0 none;
     border-radius: 25px;
     cursor: pointer;

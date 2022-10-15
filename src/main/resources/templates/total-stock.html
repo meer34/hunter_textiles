@@ -11,19 +11,26 @@
             <div class="dashboardicon2" style="text-align: left;">
               <div class="tile">
                 <h3 class="tile-title">Fabric Stock</h3>
-        <div class="dashboardicon col-lg-12 flexdisplay">
-          <div class="col-lg-6 col-xs-12">
-            <label>View Stock By</label><!--view by sort no is default, if select view by mahajan name sort no will be hidden-->
-           <select id="loadDataBy" style="height: 41px; background-color: #fff; ">
-              <option style="color: #333;" value="sortNo" th:selected="${loadedBy=='sortNo'}" >Sort No</option>
-              <option style="color: #333;" value="mahajanName" th:selected="${loadedBy=='mahajanName'}" >Mahajan Name</option>
-            </select>
-          </div>
-          <div class="col-lg-6 col-xs-12">
-            <label>Search</label>
-            <input type="text" id="searchTable" placeholder="Search">            
-          </div>
-        </div>
+				
+				<form class="dashboardicon col-lg-12 flexdisplay" th:action="@{/total-stock}" method="get">
+					<div class="col-lg-4 col-xs-12">
+						<label>View Stock By</label>
+					<select name="loadDataBy" id="loadDataBy" style="height: 41px; background-color: #fff; ">
+						<option style="color: #333;" value="sortNo" th:selected="${loadedBy=='sortNo'}" >Sort No</option>
+						<option style="color: #333;" value="mahajanName" th:selected="${loadedBy=='mahajanName'}" >Mahajan Name</option>
+						</select>
+					</div>
+					<div class="col-lg-6 col-xs-12">
+						<label>Search</label>
+						<input type="text" name="keyword" id="keyWord" placeholder="Sort No / Mahajan Name" th:value="${keyword}">           
+					</div>
+					<div class="col-lg-2 col-xs-12" style="padding-top: 20px; text-align:left;">
+						<input type="button" name="clear" class="previous action-button-previous" value=" Clear " 
+							onClick="document.getElementById('keyWord').value='';">
+						<input type="submit" class="submit action-button" value="Search">
+					</div>
+				</form>
+				
                 <div class="table-responsive table_size" style="margin-top: 5px;">
                     <table class="table table-bordered table-responsive table-hover" style="width: 100%; margin-top: 10px;" id="printTable" >
                       <thead class="thead-inverse" style="background-color: #199999; color: #FFF;">

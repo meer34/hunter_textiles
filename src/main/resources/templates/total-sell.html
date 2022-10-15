@@ -11,10 +11,10 @@
             <div class="dashboardicon2" style="text-align: left;">
               <div class="tile">
                 <h3 class="tile-title">Total Sell</h3>
-                <form class="dashboardicon" th:action="@{/searchTotalSale}" method="get">
+                <form class="dashboardicon" th:action="@{/total-sell}" method="get">
                   <div class="col-lg-12" style="text-align: left;">
                       <label>Search</label>
-                      <input type="text" name="keyword" placeholder="Search"><!--search by sort no or roll no)-->
+                      <input type="text" name="keyword" id="keyWord" placeholder="Search" th:value="${keyword}">
                   </div>
                   <div class="col-lg-12 flexdisplay">
                     <input type="submit" class="submit action-button"
@@ -35,19 +35,22 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr style="background-color: #FFF" th:each="totalSale : ${totalSaleList}" >
+                        <tr style="background-color: #FFF" th:each="totalSale : ${listPage.content}" >
                           <td th:text="${totalSale.rollNo}" />
                           <td th:text="${totalSale.quantity}" />
                           <td th:text="${totalSale.sortNo}" />
                           <td>
                           	<div class="dashboardicon2" style="text-align: middle;">
                       			<input type="button" name="action" class="submit action-button" value="View" style=" border-radius: 0;"
-                      				th:attr="onclick=|location.href='viewStockOutsBySortNoAndRollNo?sortNo=${totalSale.rollNo}&rollNo=${totalSale.rollNo}'|" >
+                      				th:attr="onclick=|location.href='stock-out?sortNo=${totalSale.sortNo}&rollNo=${totalSale.rollNo}'|" >
                     		</div>
                     	   </td>
                         </tr>
                       </tbody>
                     </table>
+					
+					<div th:replace="fragments :: pagination"></div>
+					
                 </div>
               </div>
             </div>

@@ -23,32 +23,6 @@
 								</select>
 							</div>
 							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-								<label>GST</label>
-								<input type="text" class="form-control" name="gst" placeholder="GST" th:value="${stockOut?.gst}">
-							</div>						
-						</div>
-						<div class="col-lg-12 flexdisplay">
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"><label>Select Roll</label>
-								<select class="form-control" name="selectRoll" id="selectRoll" style="height: 48px;" >
-									<option selected disabled="disabled" value="">Select Roll</option>
-									<option style="color: #333;" th:each="stockInRoll : ${stockInRolls}" th:text="${stockInRoll.rollNo}" th:value="${stockInRoll}" ></option>
-								</select>
-							</div>
-							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-								<label>Total Quantity(M)</label>
-								<input type="text" class="form-control" name="totalQuantity" id="totalQuantity" placeholder="0" readonly th:value="${stockOut?.totalQuantity}">
-							</div>
-						</div>
-						<div class="col-lg-12 flexdisplay">
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-								<label>Rate Per Meter</label>
-								<input type="number" min="0" lass="form-control" name="rate" id="rate" value="0" th:value="${stockOut?.rate}">
-							</div>    
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-								<label>Total Price</label>
-								<input type="text" class="form-control" name="totalPrice" id="totalPrice" placeholder="0" readonly th:value="${stockOut?.totalPrice}">
-							</div>  
-							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 								<label>Date</label>
 								<input type="date" class="form-control" name="date" placeholder="Date" th:value="${stockOut?.date}">
 							</div>
@@ -59,6 +33,43 @@
 								<input type="text" class="form-control" name="remarks" placeholder="Remarks" th:value="${stockOut?.remarks}">
 							</div>
 						</div>
+						<div class="col-lg-12 flexdisplay">
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Rate Per Meter</label>
+								<input type="number" min="0" lass="form-control" name="rate" id="rate" value="0" 
+									th:value="${stockOut?.rate}" onChange="updateRollTableData()">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Total Quantity(M)</label>
+								<input type="text" class="form-control" name="totalQuantity" id="totalQuantity" placeholder="0" readonly th:value="${stockOut?.totalQuantity}">
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+								<label>Total Price</label>
+								<input type="text" class="form-control" name="totalPrice" id="totalPrice" placeholder="0" readonly th:value="${stockOut?.totalPrice}">
+							</div>
+						</div>
+						
+						
+						<div class="clearfix"></div>
+						<div class="row addProduct">
+							<div class="col-lg-12 flexdisplay">
+								<div class="col-lg-12">
+									<label>Roll Selection / Entry</label>
+								</div>
+							</div>
+							<div class="col-lg-12 flexdisplay">
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<select class="form-control" name="selectRoll" id="selectRoll" style="height: 48px;" >
+										<option selected disabled="disabled" value="">Select Roll</option>
+										<option style="color: #333;" th:each="stockInRoll : ${stockInRolls}" th:text="${stockInRoll.rollNo}" th:value="${stockInRoll}" ></option>
+									</select>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<input type ="button" style="background-color: #199999; color: #FFF;width: auto;padding: 10px 15px;" value="Add Roll" id="addRoll">
+								</div>
+							</div>
+						</div>
+						
 						<div class="table-responsive table_size" style="margin-top: 50px;">
 							<table class="table table-bordered table-responsive table-hover" style="width: 100%;" id="rollTable" >
 								<thead id="myHeader" class="thead-inverse" style="background-color: #199999; color: #FFF;">
@@ -81,7 +92,7 @@
 										<td th:text="${stockOutRoll?.stockOutPrice}" />
 										<td>
 											<input type="button" id="deleteStockOutRollBtn" class="submit action-button2" value="Delete" >
-											<input type="hidden" name="stockOutParts" class="submit action-button2" 
+											<input type="hidden" name="stockOutParts" class="stockOutParts" 
 												th:value="${stockOutRoll?.id} + '|~|' + ${stockOutRoll?.stockOutPrice}" ></td>
 									</tr>
 								</tbody>
@@ -104,8 +115,8 @@
 								<label>Bill Type</label>
 								<select class="form-control" name="billType" id="billType" style="height: 48px;" onChange="toggleGSTInfo(this.value)">
 									<option selected disabled="disabled" value="">Select Type</option>
-									<option th:selected="${stockIn?.billType =='GST'}">GST</option>
-									<option th:selected="${stockIn?.billType =='Non GST'}">Non GST</option>
+									<option th:selected="${stockOut?.billType =='GST'}">GST</option>
+									<option th:selected="${stockOut?.billType =='Non GST'}">Non GST</option>
 								</select>
 							</div>
 							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">

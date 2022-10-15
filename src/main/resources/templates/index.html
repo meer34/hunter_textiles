@@ -9,36 +9,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/icon" href="images/favicon.jpeg"/>
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css">
     <style type="text/css">
     .landing{
-		margin-top: 15%;
+		margin-top: 12%;
 	}
+  body{
+  background-image: url(images/landing-bg.jpg) !important;
+  background-size: auto;
+  background-repeat: repeat;
+  overflow-x: hidden;
+  }
+.tile {
+  background: #e6e7ee;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  margin-top: 5px;
+  box-shadow: inset 2px 2px 5px #b8b9be, inset -3px -3px 7px #FFFFFF !important;
+  border: 0.0625rem solid #D1D9E6;
+}
 	@media(max-width : 768px){
 		.landing{
-			margin-top: 15%;
 			margin-left: 0 !important;
 		}
-	}
-	@media(max-width: 768px){
-		.app-content{
-			margin-left: 6% !important;
-		}
+    .app-content {
+  margin-left: 6% !important;
+  margin-right: 6%;
+}
 	}
     </style>
   </head>
-  <body class="app sidebar-mini rtl" style="background-image:url(images/landing-bg.jpg) !important; background-size: auto;background-repeat: repeat;">
+  <body class="app sidebar-mini rtl">
     <main class="app-content landing">
-      <div class="col-lg-5 col-md-5 col-xs-12 col-sm-6 col-lg-offset-2 col-sm-offset-2 col-xs-offset-0">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
-          <a href="https://hunter-software.com/home"><img src="images/landing-img1.jpeg" class="img-circle">
-          <h4 style="color: #fff;">HUNTER TEXTILE</h4></a>
+        <div class="row justify-content-center">
+          <h3 class="text-center text-white"><b>Welcome to HUNTER GROUP</b></h3>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center tile">
+          <a href="https://hunter-software.com/home" style="text-decoration: none;"><img src="images/landing-img1.jpeg" class="img-circle">
+          <h4 style="color: #000;">HUNTER TEXTILE</h4></a>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
-          <a href="https://trading.hunter-software.com/home"><img src="images/landing-img2.jpeg" class="img-circle">
-          <h4 style="color: #fff;">HUNTER TRADING</h4></a>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center tile">
+          <a href="https://trading.hunter-software.com/home" style="text-decoration: none;"><img src="images/landing-img2.jpeg" class="img-circle">
+          <h4 style="color: #000;">HUNTER TRADING</h4></a>
         </div>
       </div>
+    </div>
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>

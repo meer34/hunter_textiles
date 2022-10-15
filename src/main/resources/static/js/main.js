@@ -106,10 +106,11 @@ $('.pageElement, .page-link-next, .page-link-prev, .pageSizeChange, .goTo').on("
 	var pageSize = $("#pageSize").val(),
 			pageNumber = $(".pageElement.active").first().text(),
 			keyword = $("#keyWord").val(),
+			loadDataBy = $("#loadDataBy").val(),
 			fromDate = $("#fromDate").val(),
 			toDate = $("#toDate").val(),
 			totalPages = $(".pageElement").length,
-			url;
+			url = '?';
 
 	console.log("page-" + pageNumber + ' size-' + pageSize);
 	
@@ -132,14 +133,15 @@ $('.pageElement, .page-link-next, .page-link-prev, .pageSizeChange, .goTo').on("
 		else pageNumber = Number(pageNumber) - 1;
 		
 	}
-
-	if(keyword != '' || fromDate != '' || toDate != '') {
-		url = "?fromDate=" + fromDate + "&toDate=" + toDate + "&keyword=" + keyword + "&size=" + pageSize + "&page=" + pageNumber;
-	} else {
-		url = "?size=" + pageSize + "&page=" + pageNumber;
-	}
-
+	
+	url += "page=" + pageNumber + "&size=" + pageSize;
+	if(fromDate != null && fromDate != '') url += "&fromDate=" + fromDate;
+	if(toDate != null && toDate != '') url += "&toDate=" + toDate;
+	if(keyword != null && keyword != '') url += "&keyword=" + keyword;
+	if(loadDataBy != null && loadDataBy != '') url += "&loadDataBy=" + loadDataBy;
+	
 	window.open(url,"_self");
+	
 });
 
 function confirmDelete() {

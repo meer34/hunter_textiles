@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.hunter.web.model.AccountReport;
 import com.hunter.web.model.BillRecord;
 import com.hunter.web.model.DashBoard;
-import com.hunter.web.model.StockOut;
 import com.hunter.web.model.TotalSale;
 import com.hunter.web.model.TotalStock;
 import com.hunter.web.repo.SummaryRepo;
@@ -52,16 +51,20 @@ public class SummaryService {
 		return summaryRepo.findAllTotalStocksByMahajanName(PageRequest.of(pageNo, pageSize));
 	}
 	
-	public List<TotalSale> getAllTotalSales() {
-		return summaryRepo.findAllByTotalSales();
+	public Page<TotalStock> getTotalStocksBySortNoAndKeyword(String keyword, int pageNo, int pageSize) {
+		return summaryRepo.findAllTotalStocksBySortNoAndKeyword(keyword, PageRequest.of(pageNo, pageSize));
 	}
 	
-	public List<TotalSale> getTotalSalesBySortNoOrRollNo(String keyword) {
-		return summaryRepo.findTotalSalesBySortNoOrRollNo(keyword);
+	public Page<TotalStock> getTotalStocksByMahajanNameAndKeyword(String keyword, int pageNo, int pageSize) {
+		return summaryRepo.findAllTotalStocksByMahajanNameAndKeyword(keyword, PageRequest.of(pageNo, pageSize));
 	}
 	
-	public List<StockOut> getStockOutsBySortNoAndRollNo(String sortNo, String rollNo) {
-		return summaryRepo.findStockOutsBySortNoAndRollNo(sortNo, rollNo);
+	public Page<TotalSale> getAllTotalSales(int pageNo, int pageSize) {
+		return summaryRepo.findAllByTotalSales(PageRequest.of(pageNo, pageSize));
+	}
+	
+	public Page<TotalSale> getTotalSalesBySortNoOrRollNo(String keyword, int pageNo, int pageSize) {
+		return summaryRepo.findTotalSalesBySortNoOrRollNo(keyword, PageRequest.of(pageNo, pageSize));
 	}
 	
 	public Long getTotalIncome() {
